@@ -16,14 +16,14 @@ public class BarVisualiser : MonoBehaviour
     [Range(0,3)]
     public float spacing = 0;
     public GameObject BarChild;
-    public GameObject[] Children = new GameObject[1024];
+    private GameObject[] Children;
     public AudioSource audioSource;
-    public float[] spectrum = new float[256];
+    private float[] spectrum = new float[256];
     public float maxHeight = 3;
-    public float ChildWidth;
+    public float initChildWidth;
     public Color colour;
 
-    private int barCount = 20;
+    private int barCount = 25;
     
     private void UpdateDisplaySprite()
     {
@@ -79,8 +79,9 @@ public class BarVisualiser : MonoBehaviour
         audioSource.volume = volume;
         audioSource.loop = true;
         audioSource.Play();
-      
 
+
+        Children = new GameObject[barCount];
         //Create the child bars
         for (int i = 0; i < barCount; i++)
         {
@@ -108,14 +109,14 @@ public class BarVisualiser : MonoBehaviour
         for (int i = 0; i < barCount; i++ )
         {
             BarVisualiserChild scriptRef = Children[i].GetComponent<BarVisualiserChild>();
-            ChildWidth = scriptRef.InitWidth;
+            initChildWidth = scriptRef.InitWidth;
             scriptRef.SetColour(colour);
             scriptRef.SetMaxHeight(maxHeight);
 
             int relativeI = i - barCount / 2;
             Children[i].transform.position = transform.position;
-            float realSpaceing = (spacing * ChildWidth) * relativeI;
-            Children[i].transform.position += new Vector3((ChildWidth * relativeI) + realSpaceing , 0, 0);
+            float realSpaceing = (spacing * initChildWidth) * relativeI;
+            Children[i].transform.position += new Vector3((initChildWidth * relativeI) + realSpaceing , 0, 0);
 
             float percentalI = (float)i / barCount;
             percentalI = percentalI * spectrum.Length;
